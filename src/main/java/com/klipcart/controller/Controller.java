@@ -14,7 +14,7 @@ import com.klipcart.repository.UserRepository;
 import com.klipcart.security.JwtUtil;
 
 @RestController
-@CrossOrigin("http://127.0.0.1:5500/")
+@CrossOrigin("*")
 public class Controller {
 
     @Autowired
