@@ -8,10 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @RestController
@@ -35,20 +31,7 @@ public class ProductController {
             @RequestParam MultipartFile image
     ) throws IOException {
 
-        // 1. Upload Folder-ஐ உருவாக்குவதற்கான Path
-        String uploadDir = "uploads/";
-        Path uploadPath = Paths.get(uploadDir);
-
-        // 2. Folder இல்லையென்றால் புதிதாக உருவாக்குதல்
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        // 3. File-ஐ Save செய்தல் (Temp folder பிரச்சனை வராது)
-        Path filePath = uploadPath.resolve(image.getOriginalFilename());
-        Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        // 4. Product-ஐ Database-ல் Save செய்தல்
+        
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
@@ -58,8 +41,7 @@ public class ProductController {
         product.setSku(sku);
         product.setCategory(category);
         product.setTags(tags);
-        String imageURL = "uploads/" + image.getOriginalFilename();
-        product.setImageUrl(imageURL);
+        product.setImageUrl(image.getOriginalFilename());
 
         return repository.save(product);
     }
@@ -89,7 +71,7 @@ public class ProductController {
             @RequestParam String sku,
             @RequestParam String category,
             @RequestParam(required = false) String tags,
-            @RequestParam(required = false) MultipartFile image // Image Optional ஆக மாற்றப்பட்டுள்ளது
+            @RequestParam(required = false) MultipartFile image 
     ) throws IOException {
 
         Product product = repository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
@@ -102,19 +84,11 @@ public class ProductController {
         product.setSku(sku);
         product.setCategory(category);
         product.setTags(tags);
-
-        // புதிய இமேஜ் அப்லோட் செய்யப்பட்டால் மட்டும் அதை மாற்றுகிறோம்
+        
         if (image != null && !image.isEmpty()) {
-            String uploadDir = "uploads/";
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            Path filePath = uploadPath.resolve(image.getOriginalFilename());
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            product.setImageUrl("uploads/" + image.getOriginalFilename());
+            product.setImageUrl(image.getOriginalFilename());
         }
-
+        
         return repository.save(product);
     }
     
