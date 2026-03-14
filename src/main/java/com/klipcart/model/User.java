@@ -16,8 +16,8 @@ public class User {
     private String address;
     private String password;
     
- // மற்ற ஃபீல்டுகளுக்கு கீழே இதைச் சேர்க்கவும்
-    private String role = "USER"; // Default ஆக எல்லாரும் USER
+
+    private String role = "USER"; 
 
 
     public String getRole() {
