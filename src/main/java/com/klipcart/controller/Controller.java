@@ -57,6 +57,7 @@ public class Controller {
             response.put("fullName", user.getFullName());
             response.put("email", user.getEmail());
             response.put("role", user.getRole());
+            response.put("id", user.getId());
             
             return ResponseEntity.ok(response);
         }
