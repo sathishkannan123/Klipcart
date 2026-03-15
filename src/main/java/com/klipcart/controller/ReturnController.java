@@ -37,10 +37,13 @@ public class ReturnController {
     }
 
     @PutMapping("/admin/update/{id}")
-    public ResponseEntity<?> updateReturnStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<?> updateReturnStatus(@PathVariable Long id, @RequestParam String status, @RequestParam(required = false) String pickupDate) {
         ReturnRequest request = returnRepository.findById(id).orElse(null);
         if (request != null) {
             request.setStatus(status);
+            if (pickupDate != null && !pickupDate.isEmpty()) {
+                request.setPickupDate(pickupDate);
+            }
             returnRepository.save(request);
             return ResponseEntity.ok("Return status updated successfully");
         }

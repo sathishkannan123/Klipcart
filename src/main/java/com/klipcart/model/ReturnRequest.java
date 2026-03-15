@@ -16,6 +16,9 @@ public class ReturnRequest {
     private String reason;
     private String status = "PENDING"; 
     private LocalDateTime requestDate;
+    private String pickupDate;
+
+    
 
     public ReturnRequest() {
         this.requestDate = LocalDateTime.now();
@@ -67,5 +70,12 @@ public class ReturnRequest {
 
     public void setRequestDate(LocalDateTime requestDate) {
         this.requestDate = requestDate;
+    }
+    public String getPickupDate() {
+        return pickupDate;
+    }
+
+    public void setPickupDate(String pickupDate) {
+        this.pickupDate = pickupDate;
     }
 }
