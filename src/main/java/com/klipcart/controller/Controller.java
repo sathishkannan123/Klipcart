@@ -33,7 +33,7 @@ public class Controller {
             return "Email already exists!";
         }
         
-        // பாஸ்வேர்டை Encrypt செய்து சேமிக்கிறோம்
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
         userRepository.save(user);
@@ -46,18 +46,22 @@ public class Controller {
     public ResponseEntity<?> login(@RequestBody User loginUser) {
         User user = userRepository.findByEmail(loginUser.getEmail()).orElse(null);
 
-        // Encrypt செய்யப்பட்ட பாஸ்வேர்டுடன் ஒப்பிடுகிறோம்
+        
         if (user != null && passwordEncoder.matches(loginUser.getPassword(), user.getPassword())) {
             
             String token = jwtUtil.generateToken(user.getEmail(), user.getRole()); // Token உருவாக்கம்
             
-            // Token மற்றும் User விவரங்களை JSON ஆக அனுப்புகிறோம்
+           
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("fullName", user.getFullName());
             response.put("email", user.getEmail());
             response.put("role", user.getRole());
             response.put("id", user.getId());
+            
+         
+            user.setOnline(true);
+            userRepository.save(user);
             
             return ResponseEntity.ok(response);
         }
@@ -92,5 +96,15 @@ public class Controller {
     public String deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return "User deleted successfully!";
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutCustomer(@RequestParam String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            user.setOnline(false); 
+            userRepository.save(user);
+            return ResponseEntity.ok("Logged out successfully");
+        }
+        return ResponseEntity.badRequest().body("User not found");
     }
 }

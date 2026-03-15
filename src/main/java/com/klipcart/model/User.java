@@ -15,7 +15,14 @@ public class User {
     private String phone;
     private String address;
     private String password;
+    @Column(columnDefinition = "boolean default false")
+    private boolean online;
+
     
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 
     private String role = "USER"; 
 
@@ -63,6 +70,9 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public boolean isOnline() {
+        return online;
+    }
 	public User(Long id, String fullName, String email, String phone, String address, String password) {
 		super();
 		this.id = id;
