@@ -97,7 +97,7 @@ public class Controller {
         userRepository.deleteById(id);
         return "User deleted successfully!";
     }
-    @PostMapping("/logout")
+    @PostMapping("/user-logout")
     public ResponseEntity<?> logoutCustomer(@RequestParam String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user != null) {
